@@ -4,5 +4,4 @@ create table user (
   password                      varchar(255),
   constraint pk_user primary key (id)
 );
-create sequence user_seq;
-
+create sequence user_seq ;

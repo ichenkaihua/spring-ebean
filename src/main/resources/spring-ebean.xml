@@ -53,9 +53,9 @@
 		<property name="dataSource" ref="dataSource"/>
 		<!--<property name="disableClasspathSearch" value="true"/>-->
 		<!--是否生成sql文件-->
-		<property name="ddlGenerate" value="true"/>
+		<property name="ddlGenerate" value="false"/>
 		<!--时候启动时读取sql文件，并执行-->
-		<property name="ddlRun" value="true"/>
+		<property name="ddlRun" value="false"/>
 	</bean>
 
 	<!-- Ebean server -->
@@ -64,6 +64,12 @@
 	</bean>
 
 	<aop:aspectj-autoproxy  />
+
+	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+		<property name="dataSource" ref="dataSource"/>
+
+	</bean>
+
 
 	<aop:config>
 		<aop:pointcut id="appService"

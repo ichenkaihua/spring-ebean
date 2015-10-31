@@ -29,5 +29,7 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager"  />
 
+
+
 	<import resource="spring-ebean.xml"/>
 </beans>
