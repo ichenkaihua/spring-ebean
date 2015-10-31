@@ -7,6 +7,7 @@ spring是个非常优秀的框架，ebean-orm也是个优秀的开源项目，�
 * 框架:spring4+springmvc4+ebean-orm6
 * 开发环境:idea,最智能的java开发工具
 * 构建工具:gradle，最灵活的构建工具
+* 数据库管理工具:[flyway][2],数据库轻松迁移
 
 ## 项目配置
 
@@ -109,7 +110,7 @@ ebeaon-orm有个麻烦点的地方，叫`Enhancement操作`，这个`Enhancement
 
 
 
-	
+
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
 		<constructor-arg>
 			<bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
@@ -148,9 +149,9 @@ ebeaon-orm有个麻烦点的地方，叫`Enhancement操作`，这个`Enhancement
 		<property name="dataSource" ref="dataSource"/>
 		<!--<property name="disableClasspathSearch" value="true"/>-->
 		<!--是否生成sql文件-->
-		<property name="ddlGenerate" value="true"/>
+		<property name="ddlGenerate" value="false"/>
 		<!--时候启动时读取sql文件，并执行-->
-		<property name="ddlRun" value="true"/>
+		<property name="ddlRun" value="false"/>
 	</bean>
 
 	<!-- Ebean server -->
@@ -159,6 +160,12 @@ ebeaon-orm有个麻烦点的地方，叫`Enhancement操作`，这个`Enhancement
 	</bean>
 
 	<aop:aspectj-autoproxy  />
+
+	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+		<property name="dataSource" ref="dataSource"/>
+
+	</bean>
+
 
 	<aop:config>
 		<aop:pointcut id="appService"
@@ -181,7 +188,7 @@ ebeaon-orm有个麻烦点的地方，叫`Enhancement操作`，这个`Enhancement
 
 </beans>
 ```
-这里需要**注意**的是，`transactionManager`里的事物必须是`org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy`，`LazyConnectionDataSourceProxy`对真实的datasource进行代理，以前没注意到这点，导致事物一直不起作用。
+这里需要**注意**的是，`transactionManager`里的事物必须是`org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy`，`LazyConnectionDataSourceProxy`对真实的datasource进行代理，以前没注意到这点，导致事物一直不起作用。为了方便数据库版本迁移，与spring整合了flyway，也就是说，每次启动应用，flyway都会自动扫描`db/migration`下的sql文件，进行迁移，更多使用方法请参照[flyway官网][2]。
 ## 使用`ebean-orm`
 ```java
 package com.chenkaihua.springebean.service;
@@ -234,5 +241,11 @@ curl http://localhost:8080/users
 # 关闭server
 ./gradlew appStop
 ```
+## 关于
+博客: [www.chenkaihua.com][3]
+email: admin@chenkaihua.com
+
 
 [1]:http://http://ebean-orm.github.io/
+[2]: http://www.http://flywaydb.org/
+[3]: http://www.chenkaihua.com
